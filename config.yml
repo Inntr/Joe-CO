@@ -1,0 +1,169 @@
+# ตั้งค่าหลังบ้าน (Decap CMS)
+# ⚠️ แก้บรรทัด repo ให้เป็น "ชื่อผู้ใช้GitHub/ชื่อrepo" ของคุณ  เช่น somchai/rov-skin-shop
+backend:
+  name: github
+  repo: YOUR-GITHUB-USERNAME/YOUR-REPO-NAME
+  branch: main
+
+publish_mode: simple
+media_folder: "static/uploads"
+public_folder: "/static/uploads"
+site_url: https://YOUR-SITE.netlify.app
+display_url: https://YOUR-SITE.netlify.app
+
+collections:
+  - name: skins
+    label: "สกิน"
+    label_singular: "สกิน"
+    folder: "content/skins"
+    create: true
+    format: json
+    extension: json
+    slug: "skin-{{year}}{{month}}{{day}}{{hour}}{{minute}}{{second}}"
+    summary: "{{name}}"
+    fields:
+      - { label: "ชื่อสกิน", name: name, widget: string }
+      - { label: "ฮีโร่", name: hero, widget: relation, collection: heroes, search_fields: ["name"], value_field: "{{slug}}", display_fields: ["name"] }
+      - { label: "หมวดหมู่", name: category, widget: relation, collection: categories, search_fields: ["name"], value_field: "{{slug}}", display_fields: ["name"] }
+      - { label: "รูปภาพ (อัปโหลด หรือกด Insert from URL เพื่อวางลิงก์)", name: image_url, widget: image, required: false }
+      - { label: "ลิงก์ดาวน์โหลด (ถ้าว่างจะไม่แสดงบนเว็บ)", name: download_url, widget: string, required: false }
+      - { label: "คำอธิบาย", name: description, widget: text, required: false }
+      - { label: "เปิดใช้งาน", name: is_active, widget: boolean, default: true }
+      - { label: "ลำดับ (เลขน้อยขึ้นก่อน)", name: sort_order, widget: number, value_type: int, default: 0, required: false }
+
+  - name: heroes
+    label: "ฮีโร่"
+    label_singular: "ฮีโร่"
+    folder: "content/heroes"
+    create: true
+    format: json
+    extension: json
+    slug: "hero-{{year}}{{month}}{{day}}{{hour}}{{minute}}{{second}}"
+    summary: "{{name}}"
+    fields:
+      - { label: "ชื่อฮีโร่", name: name, widget: string }
+      - { label: "รูปภาพ", name: image_url, widget: image, required: false }
+      - { label: "เปิดใช้งาน", name: is_active, widget: boolean, default: true }
+
+  - name: packs
+    label: "แพ็ครวม"
+    label_singular: "แพ็ค"
+    folder: "content/packs"
+    create: true
+    format: json
+    extension: json
+    slug: "pack-{{year}}{{month}}{{day}}{{hour}}{{minute}}{{second}}"
+    summary: "{{name}}"
+    fields:
+      - { label: "ชื่อแพ็ค", name: name, widget: string }
+      - { label: "หมวดหมู่", name: category, widget: relation, collection: categories, search_fields: ["name"], value_field: "{{slug}}", display_fields: ["name"] }
+      - { label: "รูปภาพ", name: image_url, widget: image, required: false }
+      - { label: "ลิงก์ดาวน์โหลด (ถ้าว่างจะไม่แสดงบนเว็บ)", name: download_url, widget: string, required: false }
+      - { label: "คำอธิบาย", name: description, widget: text, required: false }
+      - label: "รายการสกินในแพ็ค"
+        name: items
+        widget: list
+        required: false
+        field: { label: "ชื่อสกิน/ฮีโร่", name: label, widget: string }
+      - { label: "เปิดใช้งาน", name: is_active, widget: boolean, default: true }
+      - { label: "ลำดับ (เลขน้อยขึ้นก่อน)", name: sort_order, widget: number, value_type: int, default: 0, required: false }
+
+  - name: categories
+    label: "หมวดหมู่"
+    label_singular: "หมวดหมู่"
+    folder: "content/categories"
+    create: true
+    format: json
+    extension: json
+    slug: "category-{{year}}{{month}}{{day}}{{hour}}{{minute}}{{second}}"
+    summary: "{{name}}"
+    fields:
+      - { label: "ชื่อหมวดหมู่", name: name, widget: string }
+      - label: "ประเภท"
+        name: kind
+        widget: select
+        options:
+          - { label: "ตัวเดียว (การ์ดสกินแยกกัน)", value: single }
+          - { label: "หลายสกิน (การ์ดฮีโร่ แล้วเลือกสกิน)", value: multi }
+          - { label: "แพ็ครวม", value: pack }
+      - { label: "คำอธิบาย", name: description, widget: string, required: false }
+      - { label: "เปิดใช้งาน", name: is_active, widget: boolean, default: true }
+      - { label: "ลำดับ (เลขน้อยขึ้นก่อน)", name: sort_order, widget: number, value_type: int, default: 0, required: false }
+
+  - name: announcements
+    label: "ประกาศหน้าแรก"
+    label_singular: "ประกาศ"
+    folder: "content/announcements"
+    create: true
+    format: json
+    extension: json
+    slug: "announcement-{{year}}{{month}}{{day}}{{hour}}{{minute}}{{second}}"
+    summary: "{{title}}"
+    fields:
+      - { label: "หัวข้อ", name: title, widget: string }
+      - { label: "เนื้อหา", name: content, widget: text, required: false }
+      - { label: "เปิดใช้งาน", name: is_active, widget: boolean, default: true }
+      - { label: "วันที่ (ประกาศล่าสุดที่เปิดใช้งานจะถูกแสดง)", name: created_at, widget: datetime }
+
+  - name: videos
+    label: "คลิปวิดีโอ"
+    label_singular: "คลิป"
+    folder: "content/videos"
+    create: true
+    format: json
+    extension: json
+    slug: "video-{{year}}{{month}}{{day}}{{hour}}{{minute}}{{second}}"
+    summary: "{{title}}"
+    fields:
+      - { label: "ชื่อคลิป", name: title, widget: string, required: false }
+      - { label: "ลิงก์ embed (เช่น https://www.youtube.com/embed/xxxx)", name: video_url, widget: string }
+      - { label: "เปิดใช้งาน", name: is_active, widget: boolean, default: true }
+      - { label: "ลำดับ", name: sort_order, widget: number, value_type: int, default: 0, required: false }
+
+  - name: backgrounds
+    label: "พื้นหลังเว็บ"
+    label_singular: "พื้นหลัง"
+    folder: "content/backgrounds"
+    create: true
+    format: json
+    extension: json
+    slug: "background-{{year}}{{month}}{{day}}{{hour}}{{minute}}{{second}}"
+    summary: "{{name}}"
+    fields:
+      - { label: "ชื่อ", name: name, widget: string, required: false }
+      - { label: "รูปพื้นหลัง", name: image_url, widget: image }
+      - { label: "ใช้เป็นพื้นหลังหลัก (เปิดได้ทีละ 1 รายการ)", name: is_active, widget: boolean, default: false }
+
+  - name: menu_links
+    label: "ลิงก์ในเมนู"
+    label_singular: "ลิงก์เมนู"
+    folder: "content/menu_links"
+    create: true
+    format: json
+    extension: json
+    slug: "menu-{{year}}{{month}}{{day}}{{hour}}{{minute}}{{second}}"
+    summary: "{{name}}"
+    fields:
+      - { label: "ชื่อที่แสดง", name: name, widget: string }
+      - { label: "Font Awesome icon class (เช่น fa-solid fa-link)", name: icon, widget: string, default: "fa-solid fa-link" }
+      - { label: "ลิงก์ปลายทาง", name: url, widget: string }
+      - { label: "เปิดในแท็บใหม่", name: open_new_tab, widget: boolean, default: false }
+      - { label: "เปิดใช้งาน", name: is_active, widget: boolean, default: true }
+      - { label: "ลำดับ", name: sort_order, widget: number, value_type: int, default: 0, required: false }
+
+  - name: social_links
+    label: "โซเชียลมีเดีย"
+    label_singular: "โซเชียล"
+    folder: "content/social_links"
+    create: true
+    format: json
+    extension: json
+    slug: "social-{{year}}{{month}}{{day}}{{hour}}{{minute}}{{second}}"
+    summary: "{{name}}"
+    fields:
+      - { label: "ชื่อ (เช่น YouTube)", name: name, widget: string }
+      - { label: "Font Awesome icon class (เช่น fa-brands fa-youtube)", name: icon, widget: string }
+      - { label: "ลิงก์ปลายทาง", name: url, widget: string }
+      - { label: "สีไอคอน", name: color, widget: color, default: "#ffffff" }
+      - { label: "เปิดใช้งาน", name: is_active, widget: boolean, default: true }
+      - { label: "ลำดับ", name: sort_order, widget: number, value_type: int, default: 0, required: false }
